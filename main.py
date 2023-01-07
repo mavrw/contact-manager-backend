@@ -23,14 +23,17 @@ class DBContact(BaseModel):
 
 
 app = FastAPI()
+
+global next_available_contact_id
+global contacts
+
+
 next_available_contact_id = 1
 
-global contacts
 contacts = {}
 
 
 def get_next_available_contact_id():
-    global next_available_contact_id
 
     next_id = next_available_contact_id
     next_available_contact_id += 1
