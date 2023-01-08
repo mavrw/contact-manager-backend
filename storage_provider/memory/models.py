@@ -17,3 +17,10 @@ class DBContact(BaseModel):
     phone_number: Union[str, None] = None
     email: Union[str, None] = None
     contact_photo: str
+
+
+class Schema:
+    class Contact(DBContact):
+
+        class Config:
+            orm_mode = True

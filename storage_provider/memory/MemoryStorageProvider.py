@@ -1,6 +1,6 @@
-from storage_provider.memory.models import Contact, DBContact
-from storage_provider.StorageProvider import StorageProvider
 from Utils import hash_contact_photo
+from storage_provider.StorageProvider import StorageProvider
+from storage_provider.memory.models import Contact, DBContact, Schema
 
 next_available_contact_id: int = 1
 
@@ -14,8 +14,10 @@ class MemoryStorageProvider(StorageProvider):
     """ Init """
 
     def __init__(self):
+        super().__init__()
         self.contacts = {}
         self.next_available_contact_id = 1
+        self.set_schema(Schema.Contact)
 
     """ Implementation Specific Methods """
 
@@ -26,7 +28,13 @@ class MemoryStorageProvider(StorageProvider):
 
     """ Override Methods """
 
-    def create_contact(self, contact: Contact) -> DBContact:
+    def get_schema(self):
+        return self.schema
+
+    def set_schema(self, rm):
+        self.schema = rm
+
+    def create_contact(self, db, contact: Contact) -> DBContact:
         contact_id = self.get_next_available_contact_id()
         saved_contact = DBContact(**contact.dict(),
                                   id=contact_id,
@@ -37,7 +45,7 @@ class MemoryStorageProvider(StorageProvider):
 
         return saved_contact
 
-    def update_contact(self, contact_id, new_info: Contact) -> DBContact:
+    def update_contact(self, db, contact_id, new_info: Contact) -> DBContact:
         contact_dict = self.contacts.get(contact_id).dict()
         contact_dict.update(**new_info.dict())
         saved_contact = DBContact(**contact_dict)
@@ -47,11 +55,11 @@ class MemoryStorageProvider(StorageProvider):
 
         return saved_contact
 
-    def delete_contact(self, contact_id: int):
+    def delete_contact(self, db, contact_id: int):
         self.contacts.pop(contact_id)
 
-    def get_all_contacts(self) -> dict[int, DBContact]:
+    def get_all_contacts(self, db) -> dict[int, DBContact]:
         return self.contacts
 
-    def get_contact_by_id(self, contact_id: int) -> DBContact:
+    def get_contact_by_id(self, db, contact_id: int) -> DBContact:
         return self.contacts.get(contact_id)
