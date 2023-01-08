@@ -1,7 +1,10 @@
 from Models import DBContact, Contact
 
 
-class StorageProviderInterface:
+class StorageProvider:
+
+    def __init__(self):
+        pass
 
     def create_contact(self, contact: Contact) -> DBContact:
         """ Create a new contact in the database """

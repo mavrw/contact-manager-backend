@@ -2,12 +2,12 @@ import hashlib
 
 from fastapi import FastAPI, HTTPException, status
 
-from InMemoryStorageProvider import InMemoryStorageProvider
+from MemoryStorage import MemoryStorage
 from Models import Contact
 
 app = FastAPI()
 
-db_provider = InMemoryStorageProvider()
+db_provider = MemoryStorage()
 
 
 @app.post("/contact/")

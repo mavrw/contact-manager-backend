@@ -1,19 +1,11 @@
 from Models import Contact, DBContact
-from StorageProviderInterface import StorageProviderInterface
+from StorageProvider import StorageProvider
 from Utils import hash_contact_photo
 
 next_available_contact_id: int = 1
 
 
-# def get_next_available_contact_id():
-#     global next_available_contact_id
-#
-#     next_id = next_available_contact_id
-#     next_available_contact_id += 1
-#     return next_id
-
-
-class InMemoryStorageProvider(StorageProviderInterface):
+class MemoryStorage(StorageProvider):
     contacts: dict[int, DBContact]
     next_available_contact_id: int
 
@@ -33,7 +25,7 @@ class InMemoryStorageProvider(StorageProviderInterface):
     """ Override Methods """
 
     def create_contact(self, contact: Contact) -> DBContact:
-        """ Overrides StorageProviderInterface.create_contact() """
+        """ Overrides StorageProvider.create_contact() """
 
         contact_id = self.get_next_available_contact_id()
         saved_contact = DBContact(**contact.dict(),
@@ -46,7 +38,7 @@ class InMemoryStorageProvider(StorageProviderInterface):
         return saved_contact
 
     def update_contact(self, contact_id, new_info: Contact) -> DBContact:
-        """ Overrides StorageProviderImplementation.update_contact() """
+        """ Overrides StorageProvider.update_contact() """
 
         contact_dict = self.contacts.get(contact_id).dict()
         contact_dict.update(**new_info.dict())
@@ -58,16 +50,16 @@ class InMemoryStorageProvider(StorageProviderInterface):
         return saved_contact
 
     def delete_contact(self, contact_id):
-        """ Overrides StorageProviderImplementation.delete_contact() """
+        """ Overrides StorageProvider.delete_contact() """
 
         self.contacts.pop(contact_id)
 
     def get_all_contacts(self) -> dict[int, DBContact]:
-        """ Overrides StorageProviderImplementation.get_all_contacts() """
+        """ Overrides StorageProvider.get_all_contacts() """
 
         return self.contacts
 
     def get_contact_by_id(self, contact_id: int) -> DBContact:
-        """ Overrides StorageProviderImplementation.get_contact_by_id() """
+        """ Overrides StorageProvider.get_contact_by_id() """
 
         return self.contacts.get(contact_id)
