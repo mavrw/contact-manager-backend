@@ -1,13 +1,12 @@
-import hashlib
+from fastapi import FastAPI, HTTPException
 
-from fastapi import FastAPI, HTTPException, status
+from storage_provider.memory.MemoryStorageProvider import MemoryStorageProvider
+from storage_provider.memory.models import Contact
 
-from MemoryStorage import MemoryStorage
-from Models import Contact
+
+db_provider = MemoryStorageProvider()
 
 app = FastAPI()
-
-db_provider = MemoryStorage()
 
 
 @app.post("/contact/")
@@ -28,7 +27,11 @@ async def get_all_contacts():
 @app.get("/contact/{contact_id}/")
 async def get_contact_by_id(contact_id: int):
     try:
-        return db_provider.get_contact_by_id(contact_id)
+        contact = db_provider.get_contact_by_id(contact_id)
+        if contact:
+            return contact
+        else:
+            raise KeyError
     except KeyError:
         msg = f"{contact_id} is not a known contact ID"
         raise HTTPException(status_code=404, detail=msg)
