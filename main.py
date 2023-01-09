@@ -3,9 +3,9 @@ from typing import List
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 
-from storage_provider.mysql.MySQLStorageProvider import MySQLProvider
+from storage_provider.memory.MemoryStorageProvider import MemoryStorageProvider
 
-db_provider = MySQLProvider()
+db_provider = MemoryStorageProvider()
 
 app = FastAPI()
 

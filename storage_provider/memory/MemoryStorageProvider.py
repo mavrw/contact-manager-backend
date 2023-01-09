@@ -1,3 +1,5 @@
+from typing import List
+
 from Utils import hash_contact_photo
 from storage_provider.StorageProvider import StorageProvider
 from storage_provider.memory.models import Contact, DBContact, Schema
@@ -55,11 +57,15 @@ class MemoryStorageProvider(StorageProvider):
 
         return saved_contact
 
-    def delete_contact(self, db, contact_id: int):
-        self.contacts.pop(contact_id)
+    def delete_contact(self, db, contact_id: int) -> bool:
+        try:
+            self.contacts.pop(contact_id)
+            return True
+        except KeyError:
+            return False
 
-    def get_all_contacts(self, db) -> dict[int, DBContact]:
-        return self.contacts
+    def get_all_contacts(self, db) -> List[DBContact]:
+        return list(self.contacts.values())
 
     def get_contact_by_id(self, db, contact_id: int) -> DBContact:
         return self.contacts.get(contact_id)

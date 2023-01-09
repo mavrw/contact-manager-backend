@@ -9,7 +9,7 @@ from storage_provider.mysql.models import DBContact, Base
 from storage_provider.mysql.models import Schema
 
 
-class MySQLProvider(StorageProvider):
+class MySQLStorageProvider(StorageProvider):
     """ A  provider for MySQL storage """
 
     """ Init """
@@ -52,7 +52,7 @@ class MySQLProvider(StorageProvider):
         db.refresh(contact)
         return contact
 
-    def delete_contact(self, db: Session, contact_id):
+    def delete_contact(self, db: Session, contact_id) -> bool:
         if self.get_contact_by_id(db, contact_id) is not None:
             db.query(DBContact).filter(DBContact.id == contact_id).delete()
             db.commit()
