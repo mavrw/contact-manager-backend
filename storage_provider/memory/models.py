@@ -20,7 +20,7 @@ class DBContact(BaseModel):
 
 
 class Schema:
-    class Contact(DBContact):
+    class Contact(Contact):
 
         class Config:
             orm_mode = True
